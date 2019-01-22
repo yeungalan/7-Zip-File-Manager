@@ -219,7 +219,7 @@ function load(htmlelement){
 				previousPath = "";
 			}
 			console.log(previousPath);
-			$("#breadcrumb").html('<button class="ts icon mini basic button" currPath="' + $(htmlelement).attr("path") + '" path="' + previousPath + '" attr="Dir" id="returnBtn" onclick="load(this)"><i class="level up icon"></i></button> <p href="#!" class="section">' + file +'</p><div class="divider">/</div>');
+			$("#breadcrumb").html('<button class="ts icon mini basic button" currPath="' + $(htmlelement).attr("path") + '" path="' + previousPath + '" attr="Dir" id="returnBtn" onclick="load(this)"><i class="level up icon"></i></button> <p href="#!" class="section">' + file.replace(/^.*[\\\/]/, '') +'</p><div class="divider">/</div>');
 			if($(htmlelement).attr("path").length > 1){
 				$.each(path, function( a, key ) {
 					$("#breadcrumb").append('<p href="#!" class="section"><i class="folder icon"></i>' + key + '</p><div class="divider">/</div>');
@@ -252,7 +252,7 @@ function functionbar_extract(){
 }
 
 function functionbar_info(){
-	showDialog("infoUI.php?file=" + file,340,200);
+	showDialog("infoUI.php?file=" + file,340,250);
 }
 
 function showDialog(href,x,y){
