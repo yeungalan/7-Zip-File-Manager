@@ -80,11 +80,76 @@
 <div class="ts bottom right snackbar">
     <div class="content"></div>
 </div>
+<div class="ts contextmenu">
+    <div class="item" onclick="contextmenu_extract()">
+        Open
+		<span class="description">Enter</span>
+    </div>
+    <div class="item" onclick="functionbar_extract()">
+        Extract
+        <span class="description">F5</span>
+    </div>
+    <div class="item"  onclick="functionbar_info()">
+        Properties
+        <span class="description">Alt-Enter</span>
+    </div>
+</div>
+
 </body>
 <script>
 //Global variable
 var random = Math.floor((Math.random() * 10000) + 1000);
 var file = "<?php echo $_GET["file"] ?>";
+
+ts('*').contextmenu({
+    menu: '.ts.contextmenu'
+});
+
+$('body').on('click', function(e) {
+  if (e.target !== this)
+    return;
+  $("tr").removeAttr("style");
+});
+document.onkeydown = function(e) {
+    if($("[style='background-color: #e9e9e9;']").length > 0){
+        var htmlelement = $("[style='background-color: #e9e9e9;']");
+    }else{
+        var htmlelement = $("#tbody tr:first");
+    }
+    switch (e.keyCode) {
+        case 9:
+            if(htmlelement.prev().length > 0){
+                var next = htmlelement.prev();
+    	    	$("tr").removeAttr("style");
+    		    $(next).attr("style","background-color: #e9e9e9;");
+            }
+        case 13:
+            var htmlelement = $("[style='background-color: #e9e9e9;']");
+            load(htmlelement);
+            break;
+        case 38:
+            if(htmlelement.prev().length > 0){
+                var next = htmlelement.prev();
+    	    	$("tr").removeAttr("style");
+    		    $(next).attr("style","background-color: #e9e9e9;");
+            }else{
+            	$("tr").removeAttr("style");
+                $(htmlelement).attr("style","background-color: #e9e9e9;");
+            }
+            break;
+        case 40:
+            if(htmlelement.next().length > 0){
+    	    	var next = htmlelement.next();
+    	    	$("tr").removeAttr("style");
+    		    $(next).attr("style","background-color: #e9e9e9;");
+            }else{
+            	$("tr").removeAttr("style");
+                $(htmlelement).attr("style","background-color: #e9e9e9;");
+            }
+            break;
+    }
+};
+
 
 //for load data into table
 load($(returnBtn));
@@ -96,7 +161,7 @@ function onsingleclick(htmlelement){
 
 function load(htmlelement){
 	if($(htmlelement).attr("attr") == "Dir"){
-		$("#breadcrumb").html('<button class="ts icon mini basic button" disabled><i class="level up icon"></i></button>&nbsp;<p class="section"><i class="loading circle notched icon"></i>Fetching..</p>');
+		$("#breadcrumb").html('<button class="ts icon mini basic button" disabled><i class="level up icon"></i></button> <p class="section"><i class="loading circle notched icon"></i>Fetching..</p>');
 		//for load data into table
 		$.get("opr.php?method=l&rand=" + random + "&file=" + file + "&dir=" + $(htmlelement).attr("path"), function( raw ) {
 			//clear table for pepare load data into table
@@ -110,7 +175,7 @@ function load(htmlelement){
 			});
 			//create tbody
 			$(data["Information"]).each(function( a, value ) {
-				//to check if attr not exists, if not exists, assume it is an file.
+				//to check if attr not exists. if not exists, assume it is an file.
 				if(typeof value["Attributes"] === 'undefined'){
 					var attr = "File";
 				}else{
@@ -122,10 +187,24 @@ function load(htmlelement){
 				}
 				//create HTML structure
 				var tmp = "";
-				tmp = tmp + '<tr path="' + value["Path"] + '" attr="' + attr + '" ondblclick="load(this)" onclick="onsingleclick(this)">'
+				tmp = tmp + '<tr path="' + value["Path"] + '" attr="' + attr + '" ondblclick="load(this)" onclick="onsingleclick(this)" oncontextmenu="onsingleclick(this)">'
 				$.each(data["Header"], function( a, key ) {
 					if(typeof value[key] !== 'undefined'){
-						tmp = tmp + "<td>" + value[key].replace(new RegExp($(htmlelement).attr("path") + "/"),"") + "</td>";
+					    if(key == "Path"){
+					        //create fanastic icon to user
+					        if(attr == "Dir"){
+					            var tdicon = '<i class="folder outline icon"></i>';
+					        }else{
+					            var tdicon = '<i class="file outline icon"></i>';
+					        }
+					        var tdpath = value[key].replace(new RegExp($(htmlelement).attr("path") + "/"),"");
+					        if(tdpath.includes("?")){
+					            var tdicon = '<i class="exclamation triangle icon"></i>';
+					        }
+					        tmp = tmp + "<td>" + tdicon + tdpath + "</td>";
+					    }else{
+					        tmp = tmp + "<td>" + value[key] + "</td>";
+					    }
 					}else{
 						tmp = tmp + "<td></td>";
 					}
@@ -140,7 +219,7 @@ function load(htmlelement){
 				previousPath = "";
 			}
 			console.log(previousPath);
-			$("#breadcrumb").html('<button class="ts icon mini basic button" currPath="' + $(htmlelement).attr("path") + '" path="' + previousPath + '" attr="Dir" id="returnBtn" onclick="load(this)"><i class="level up icon"></i></button>&nbsp;<p href="#!" class="section">' + file +'</p><div class="divider">/</div>');
+			$("#breadcrumb").html('<button class="ts icon mini basic button" currPath="' + $(htmlelement).attr("path") + '" path="' + previousPath + '" attr="Dir" id="returnBtn" onclick="load(this)"><i class="level up icon"></i></button> <p href="#!" class="section">' + file +'</p><div class="divider">/</div>');
 			if($(htmlelement).attr("path").length > 1){
 				$.each(path, function( a, key ) {
 					$("#breadcrumb").append('<p href="#!" class="section"><i class="folder icon"></i>' + key + '</p><div class="divider">/</div>');
@@ -149,31 +228,36 @@ function load(htmlelement){
 		});
 	}else{
 		//if it was file, show it.
-		showDialog("ProgressUI.php?method=e&rand=" + random + "&file=" + file + "&dir=" + $(htmlelement).attr("path"));
+		showDialog("ProgressUI.php?method=e&rand=" + random + "&file=" + file + "&dir=" + $(htmlelement).attr("path"),720,250);
 		random = Math.floor((Math.random() * 10000) + 1000);
 	}
+}
+
+function contextmenu_extract(){
+	showDialog("ProgressUI.php?method=e&rand=" + random + "&file=" + file + "&dir=" + $("[style='background-color: #e9e9e9;']").attr("path"),720,250);
+	random = Math.floor((Math.random() * 10000) + 1000);
 }
 
 function functionbar_extract(){
 	//extract files or dir , if file then pass method=e , if dir then pass method=x
 	if($("[style='background-color: #e9e9e9;']").attr("attr") == "Dir"){
-		showDialog("CopyNMoveUI.php?method=x&rand=" + random + "&file=" + file + "&dir=" + $($("[style='background-color: #e9e9e9;']")).attr("path"));
+		showDialog("CopyNMoveUI.php?method=x&rand=" + random + "&file=" + file + "&dir=" + $($("[style='background-color: #e9e9e9;']")).attr("path"),720,250);
 	}else if($("[style='background-color: #e9e9e9;']").attr("attr") == "File"){
-		showDialog("CopyNMoveUI.php?method=e&rand=" + random + "&file=" + file + "&dir=" + $("[style='background-color: #e9e9e9;']").attr("path"));
+		showDialog("CopyNMoveUI.php?method=e&rand=" + random + "&file=" + file + "&dir=" + $("[style='background-color: #e9e9e9;']").attr("path"),720,250);
 	}else{
-		showDialog("CopyNMoveUI.php?method=x&rand=" + random + "&file=" + file + "&dir=" + $("#returnBtn").attr("currPath"));
+		showDialog("CopyNMoveUI.php?method=x&rand=" + random + "&file=" + file + "&dir=" + $("#returnBtn").attr("currPath"),720,250);
 	}
 	//generate new number for next extraction
 	random = Math.floor((Math.random() * 10000) + 1000);
 }
 
 function functionbar_info(){
-	showDialog("infoUI.php?file=" + file);
+	showDialog("infoUI.php?file=" + file,340,200);
 }
 
-function showDialog(href){
+function showDialog(href,x,y){
 	if(ao_module_virtualDesktop){
-		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI');
+		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),x,y);
 	}else{
 		$.get( href, function( data ) {
 			$( "#modaldata" ).html( data );

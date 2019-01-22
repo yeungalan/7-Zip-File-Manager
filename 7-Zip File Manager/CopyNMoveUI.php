@@ -48,7 +48,7 @@
 			<div class="eight wide column"></div>
 			<div class="eight wide column">
 				<button class="ts basic button" style="width:45%" onclick="f_ok()">OK</button>
-				&nbsp;&nbsp;&nbsp;&nbsp;
+				    
 				<button class="ts basic button" style="width:45%" onclick="f_close()">Cancel</button>
 			</div>
 		</div>
@@ -73,7 +73,7 @@ function f_ok(){
 	var href = "ProgressUI.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&dir=" + f_dir + "&destdir=" + f_extractTo;
 
 	if(ao_module_virtualDesktop){
-		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI');
+		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),720,250);
 	}else{
 		$.get( href, function( data ) {
 			$( "#modaldata" ).html( data );

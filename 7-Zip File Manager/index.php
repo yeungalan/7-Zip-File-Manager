@@ -1,9 +1,11 @@
-
 <!--
-2018/1/21 Aroz Mirror Edit Project
-
-
+2019 AroZ 7-Zip
 -->
+<?php
+if(isset($_GET["filepath"])){
+    header('Location: MainUI.php?file='.$_GET["filepath"]);
+}
+?>
 <html>
 <head>
 <title>ArOZ 7z</title>
