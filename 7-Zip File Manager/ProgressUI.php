@@ -30,7 +30,7 @@
 			</div>
 			<div class="eight wide column">
 				<span style="text-align:left">Total size:</span>
-				<span style="text-align:right"><?php echo filesize($_GET["file"]); ?> b</span>
+				<span style="text-align:right" id="totalsize">0 b</span>
 			</div>
 			
 			<div class="eight wide column">
@@ -78,7 +78,8 @@ var f_load = setInterval(function(){
 		$("#bar").attr("style","width: " + progress[progress.length - 1]);
 		$("#time").text(f_convert(f_time));
 		$("#remaining").text(f_convert(f_totaltime - f_time));
-		$("#speed").text(Math.floor(f_size / f_totaltime) + " b/s");
+		$("#speed").text(f_filesize(Math.floor(f_size / f_totaltime)) + "/s");
+		$("#totalsize").text(f_filesize(f_size));
 		f_time += 1;
 	});
 }, 1000);
@@ -190,6 +191,18 @@ function f_convert(time){
 		var formatted = "00:00:00";
 	}
 	return formatted;
+}
+
+function f_filesize(size){
+	if(size >= 1073741824){
+		return Math.floor(size/1073741824*100)/100 + "GB";
+	}else if(size >= 1048576){
+		return Math.floor(size/1048576*100)/100 + "MB";
+	}else if(size >= 1024){
+		return Math.floor(size/1024*100)/100 + "KB";
+	}else{
+		return size + "Bytes";
+	}
 }
 
 function msgbox(content,bgcolor,fontcolor){
