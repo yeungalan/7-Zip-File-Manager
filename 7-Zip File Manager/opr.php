@@ -22,6 +22,12 @@ if(!isset($_GET["file"])){
 	die('["File Error"]');
 }
 */
+if(strpos(exec('uname -m'), 'arm') !== false){
+	$executions = "7za";
+}else{
+	$executions = "7za_x86";
+}
+
 if($_GET["method"] == "ListAORDir"){
 	$result = [];
 	$dir = $_GET["dir"] !== "" ?  "../".$_GET["dir"]."/" : "../";
@@ -39,7 +45,7 @@ if($_GET["method"] == "ListAORDir"){
 	$filesnumber = -1;
 	$FileInformation = [];
 	$SevenZHeader = [];
-	exec('sudo ./7za l "'.$_GET["file"].'" -ba -slt',$output);
+	exec('sudo ./'.$executions.' l "'.$_GET["file"].'" -ba -slt',$output);
 	if($_GET["dir"] !== ""){
 		$dir = $_GET["dir"];
 	}else{
@@ -83,11 +89,12 @@ if($_GET["method"] == "ListAORDir"){
 }else if($_GET["method"] == "e"){
 	$rand = $_GET["rand"];
 	mkdir('tmp/'.$rand,0777);
-	system('./7za e -bsp1 -bso0 "'.$_GET["file"].'" "'.$_GET["dir"].'" -o"tmp/'.$rand.'/" > tmp/'.$rand.'messages',$output);
+	system('./'.$executions.' e -bsp1 -bso0 "'.$_GET["file"].'" "'.$_GET["dir"].'" -o"tmp/'.$rand.'/" > tmp/'.$rand.'messages',$output);
+	echo './'.$executions.' e -bsp1 -bso0 "'.$_GET["file"].'" "'.$_GET["dir"].'" -o"tmp/'.$rand.'/" > tmp/'.$rand.'messages';
 	echo json_encode(array("Extract finished. e"));
 }else if($_GET["method"] == "x"){
 	$rand = $_GET["rand"];
 	mkdir('tmp/'.$rand,0777);
-	system('./7za x -bsp1 -bso0 "'.$_GET["file"].'" "'.$_GET["dir"].'" -o"tmp/'.$rand.'/" > tmp/'.$rand.'messages',$output);
+	system('./'.$executions.' x -bsp1 -bso0 "'.$_GET["file"].'" "'.$_GET["dir"].'" -o"tmp/'.$rand.'/" > tmp/'.$rand.'messages',$output);
 	echo json_encode(array("Extract finished. x"));
 }
