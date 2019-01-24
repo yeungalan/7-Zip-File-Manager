@@ -87,14 +87,14 @@ $( "#path" ).keyup(function() {
 	var path = $("#path").val();
 	var displayPath = "";
 	if(f_dir == ""){
-		displayPath = "*";
+		displayPath = "...";
 	}else{
 		displayPath = f_dir;
 	}
 	if(path.slice(-1) !== "/"){
 		path = path + "/";
 	}
-	$("#filesshow").text("Extract to: /AOR/" + path + displayPath);
+	$("#filesshow").text("Extract to: /AOR/" + path + f_file.replace(/^.*[\\\/]/, '').replace(".","") + "/" + displayPath);
 	f_extractTo = "../" + path;
 });
 
