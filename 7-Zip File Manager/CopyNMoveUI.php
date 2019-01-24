@@ -89,7 +89,11 @@ $( "#path" ).keyup(function() {
 	if(f_dir == ""){
 		displayPath = "...";
 	}else{
-		displayPath = f_dir;
+	    if(f_method == "e"){
+		    displayPath = f_dir.replace(/^.*[\\\/]/, '');
+	    }else{
+	        displayPath = f_dir;
+	    }
 	}
 	if(path.slice(-1) !== "/"){
 		path = path + "/";
