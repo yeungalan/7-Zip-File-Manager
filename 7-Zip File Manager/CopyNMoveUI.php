@@ -74,6 +74,7 @@ function f_ok(){
 
 	if(ao_module_virtualDesktop){
 		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),720,250);
+		ao_module_close();
 	}else{
 		$.get( href, function( data ) {
 			$( "#modaldata" ).html( data );
