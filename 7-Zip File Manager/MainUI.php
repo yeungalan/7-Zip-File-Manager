@@ -87,11 +87,9 @@
     </div>
     <div class="item" onclick="functionbar_extract()">
         Extract
-        <span class="description">F5</span>
     </div>
     <div class="item"  onclick="functionbar_info()">
         Properties
-        <span class="description">Alt-Enter</span>
     </div>
 </div>
 
