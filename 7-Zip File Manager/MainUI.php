@@ -101,6 +101,12 @@
 var random = Math.floor((Math.random() * 10000) + 1000);
 var file = "<?php echo $_GET["file"] ?>";
 
+
+load($(returnBtn));
+$.get("deltmp.php", function(data) {
+});
+
+
 ts('*').contextmenu({
     menu: '.ts.contextmenu'
 });
