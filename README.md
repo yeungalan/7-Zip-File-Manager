@@ -18,3 +18,6 @@ We are working on progress.
 ## How to use the API
 You should use this WebAPP directly by ArOZ Online. Currently don't have any plan to support API
 
+## License
+7za: https://www.7-zip.org/license.txt
+PHP File: MIT 
