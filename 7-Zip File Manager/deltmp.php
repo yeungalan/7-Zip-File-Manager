@@ -1,4 +1,7 @@
 <?php
+include '../auth.php';
+?>
+<?php
     $dirs = scandir("./tmp/");
     foreach ($dirs as $dir){
        $time = filectime("./tmp/".$dir) ;
