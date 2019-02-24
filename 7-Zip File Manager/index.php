@@ -2,6 +2,9 @@
 2019 AroZ 7-Zip
 -->
 <?php
+include '../auth.php';
+?>
+<?php
 if(isset($_GET["filepath"])){
     header('Location: MainUI.php?file='.$_GET["filepath"]);
 }
