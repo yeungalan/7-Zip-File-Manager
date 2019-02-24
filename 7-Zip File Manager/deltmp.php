@@ -2,7 +2,7 @@
     $dirs = scandir("./tmp/");
     foreach ($dirs as $dir){
        $time = filectime("./tmp/".$dir) ;
-        if($time + 3600*3 <= time()){
+        if($time + 3600*3 <= time() && $dir !== ".." && $dir !== "."){
             //echo "$dir Deleted.\r\n";
             if(is_dir("./tmp/".$dir)){
                 rrmdir("./tmp/".$dir);
