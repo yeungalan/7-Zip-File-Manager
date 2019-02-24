@@ -1,4 +1,7 @@
 <?php
+include '../auth.php';
+?>
+<?php
 /*
 |-----------------------------|
 | 77777     ZZZZZ IIIII PPPPP |
