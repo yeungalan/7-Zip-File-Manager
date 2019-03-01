@@ -4,12 +4,14 @@ A wrapper for ArOZ Online Beta system. This webapp using UNIX shell and PHP as b
 ## Installation
 Download the repo to your desktop, rezipping only the folder "FFmpeg" and upload it to your ArOZ Online System via the "Add or Remove WebApp" interface in the System Settings > Host.
 
-Sometimes you may requries to fix the premission by using following bash command
+Sometimes you may need to fix the premission by using following bash command
+```bash
 sudo chmod 0777 7za_x86
 sudo chmod 0777 7za
 sudo chmod -R 0777 tmp
 sudo chown www-data:www-data 7za_x86
 sudo chown www-data:www-data 7za
+```
 
 ## Web Interface
 You can still use the wrapper's WebUI if you are not into the ArOZ Online System. This module also support FloatWindow Mode under Virtual Desktop Interface (ArOZ Online Only).
