@@ -37,6 +37,9 @@ include '../auth.php';
 								/AOR/
 							</div>
 							<input type="text" id="path" placeholder="Path here">
+							<button class="ts icon button" onClick="selectFolder();">
+								<i class="folder open icon"></i>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -87,6 +90,10 @@ function f_ok(){
 }
 
 $( "#path" ).keyup(function() {
+	updatePath();
+});
+
+function updatePath(){
 	var path = $("#path").val();
 	var displayPath = "";
 	if(f_dir == ""){
@@ -103,7 +110,26 @@ $( "#path" ).keyup(function() {
 	}
 	$("#filesshow").text("Extract to: /AOR/" + path + f_file.replace(/^.*[\\\/]/, '').replace(".","") + "/" + displayPath);
 	f_extractTo = "../" + path;
-});
+}
+
+function selectFolder(){
+	if (ao_module_virtualDesktop){
+		ao_module_openFileSelector(getUUID(),"setPathBySelector",undefined,undefined,false,"folder");
+	}else{
+		ao_module_openFileSelectorTab(getUUID(),"../",false,"folder","setPathBySelector");
+	}
+}
+
+function setPathBySelector(object){
+	var files = JSON.parse(object);
+	console.log(files);
+	$("#path").val(files[0].filepath);
+	updatePath();
+}
+
+function getUUID(){
+	return new Date().getTime();
+}
 
 /* still in implmention
 $( "#path" ).keypress(function() {
