@@ -1,5 +1,9 @@
 <?php
 include '../auth.php';
+$useSystemProperties = file_exists("../SystemAOB/functions/file_system/properties.php");
+if ($useSystemProperties){
+    header("Location: " . "../SystemAOB/functions/file_system/properties.php?filename=" . realpath($_GET["file"]));
+}
 ?>
 <!DOCTYPE html>
 <html>

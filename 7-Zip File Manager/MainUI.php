@@ -35,7 +35,7 @@ include '../auth.php';
 </head>
 <body>
 <div class="ts labeled icon menu" style="box-shadow: 0px 0px 0px 0 #000000 !important;">
-    <a class="item" onclick="msgbox('Error: Operation is not supported','red','white')">
+    <a class="item disabled" onclick="msgbox('Error: Operation is not supported','red','white')">
         <i class="plus icon"></i> Add
     </a>
     <a class="item" onclick="functionbar_extract();">
@@ -44,25 +44,26 @@ include '../auth.php';
     <a class="item" onclick="msgbox('Warning: Not implemented','yellow','Black')">
         <i class="chevron down icon"></i> Test
     </a>
-    <a class="item" onclick="functionbar_extract();">
+    <a class="item disabled" onclick="functionbar_extract();">
         <i class="copy icon"></i> Copy
     </a>
-	<a class="item" onclick="functionbar_extract();">
+	<a class="item disabled" onclick="functionbar_extract();">
         <i class="move icon"></i> Move
     </a>
 	<a class="item"  onclick="msgbox('Error: Operation is not supported','red','white')">
-        <i class="remove icon"></i> Delete
+        <i class="remove icon"></i> Clear Cache
     </a>
 	<a class="item" onclick="functionbar_info();">
         <i class="notice icon"></i> Info
     </a>
 </div>
-<div class="ts breadcrumb" style="left: 20px;" id="breadcrumb">
+<div class="ts breadcrumb" style="left: 20px;padding-bottom:10px;" id="breadcrumb">
 	<button class="ts icon mini basic button" path="" attr="Dir" id="returnBtn" onclick="load(this)">
-		<i class="level up icon"></i>
+		<i class="reply icon"></i>
 	</button>
 		<p href="#!" class="section"><?php echo $_GET["file"] ?></p>
 </div>
+<div class="ts fitted divider"></div>
 <table class="ts borderless table">
     <thead>
         <tr id="thead">
@@ -79,7 +80,6 @@ include '../auth.php';
         </div>
     </dialog>
 </div>
-
 <div class="ts bottom right snackbar">
     <div class="content"></div>
 </div>
@@ -102,13 +102,26 @@ include '../auth.php';
 var random = Math.floor((Math.random() * 10000) + 1000);
 var file = "<?php echo $_GET["file"] ?>";
 
+//Init floatWindow events
+ao_module_setWindowIcon("file archive outline");
+ao_module_setGlassEffectMode();
+ao_module_setWindowTitle(ao_module_codec.decodeUmFilename(basename(file)) + " 7-Zip File Manager");
+if (ao_module_virtualDesktop){
+    //Push up the body section a bit to compensate for the floatWindow offsets
+    $("body").css("padding-bottom","20px");
+}
 
-load($(returnBtn));
+function basename(path){
+    path = path.split("\\").join("/");
+    return path.split("/").pop();
+}
+
+load($("#returnBtn"));
 $.get("deltmp.php", function(data) {
 });
 
 
-ts('*').contextmenu({
+ts('.borderless.table').contextmenu({
     menu: '.ts.contextmenu'
 });
 
@@ -202,7 +215,15 @@ function load(htmlelement){
 					        if(attr == "Dir"){
 					            var tdicon = '<i class="folder outline icon"></i>';
 					        }else{
-					            var tdicon = '<i class="file outline icon"></i>';
+					            var filepath = value["Path"].trim();
+					            if (filepath != ""){
+					                var ext = filepath.split(".").pop();
+					                var icon = ao_module_utils.getIconFromExt(ext);
+					                var tdicon = '<i class="' + icon + ' icon"></i>';
+					            }else{
+					                var tdicon = '<i class="file outline icon"></i>';
+					            }
+					            
 					        }
 					        var tdpath = value[key].replace(new RegExp($(htmlelement).attr("path") + "/"),"");
 							if(tdpath.includes("?")){
@@ -235,7 +256,7 @@ function load(htmlelement){
 			if(previousPath == $(htmlelement).attr("path")){
 				previousPath = "";
 			}
-			console.log(previousPath);
+			//console.log(previousPath);
 			$("#breadcrumb").html('<button class="ts icon mini basic button" currPath="' + $(htmlelement).attr("path") + '" path="' + previousPath + '" attr="Dir" id="returnBtn" onclick="load(this)"><i class="level up icon"></i></button> <p href="#!" class="section">' + file.replace(/^.*[\\\/]/, '') +'</p><div class="divider">/</div>');
 			if($(htmlelement).attr("path").length > 1){
 				$.each(path, function( a, key ) {
@@ -269,12 +290,14 @@ function functionbar_extract(){
 }
 
 function functionbar_info(){
-	showDialog("infoUI.php?file=" + file,340,250);
+	//showDialog("infoUI.php?file=" + file,365,475);
+	var displayname = ao_module_codec.decodeUmFilename(basename(file));
+	ao_module_newfw('7-Zip File Manager/' + "infoUI.php?file=" + file,displayname + ' - Properties','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),365,475,undefined,undefined,true,true);
 }
 
 function showDialog(href,x,y){
 	if(ao_module_virtualDesktop){
-		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),x,y);
+		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),x,y,undefined,undefined,true,true);
 	}else{
 		$.get( href, function( data ) {
 			$( "#modaldata" ).html( data );
