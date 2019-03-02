@@ -31,31 +31,26 @@ include '../auth.php';
 				<div class="ts form">
 
 					<div class="field">
-						<label>Copy to:</label>
+						<label>Extract to:</label>
 						<div class="ts labeled input" style="width:100%">
 							<div class="ts label">
 								/AOR/
 							</div>
-							<input type="text" id="path" placeholder="Path here">
+							<input type="text" id="path" placeholder="Select a path for unzip.">
 							<button class="ts icon button" onClick="selectFolder();">
 								<i class="folder open icon"></i>
 							</button>
 						</div>
 					</div>
 				</div>
+				<p id="filesshow">Target: </p>
 			</div>
 			
-			<div class="sixteen wide column">
-				<p id="filesshow">
-				Extract to: 
-				</p>
-			</div>
 
 			<div class="eight wide column"></div>
 			<div class="eight wide column">
-				<button class="ts basic button" style="width:45%" onclick="f_ok()">OK</button>
-				    
-				<button class="ts basic button" style="width:45%" onclick="f_close()">Cancel</button>
+				<button class="ts basic small button" style="width:45%" onclick="f_ok()">OK</button>
+				<button class="ts basic small button" style="width:45%" onclick="f_close()">Cancel</button>
 			</div>
 		</div>
 	</div>
@@ -66,6 +61,9 @@ var f_rand = "<?php echo $_GET["rand"] ?>";
 var f_file = "<?php echo $_GET["file"] ?>";
 var f_dir = "<?php echo $_GET["dir"] ?>";
 var f_extractTo = "";
+
+ao_module_setFixedWindowSize();
+ao_module_setWindowSize(650,200);
 
 function f_close(){
 	if(ao_module_virtualDesktop){
@@ -108,7 +106,7 @@ function updatePath(){
 	if(path.slice(-1) !== "/"){
 		path = path + "/";
 	}
-	$("#filesshow").text("Extract to: /AOR/" + path + f_file.replace(/^.*[\\\/]/, '').replace(".","") + "/" + displayPath);
+	$("#filesshow").text("Target: /AOR/" + path + f_file.replace(/^.*[\\\/]/, '').replace(".","") + "/" + displayPath);
 	f_extractTo = "../" + path;
 }
 

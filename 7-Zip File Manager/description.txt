@@ -1,1 +1,1 @@
-For extarcting 7z files.
+7-Zip File Manager for ArOZ Online System

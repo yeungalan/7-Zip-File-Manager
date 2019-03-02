@@ -73,8 +73,16 @@ var f_time = 1;
 var f_totaltime = 1;
 var f_cancel = false;
 
+//Initiate floatWindow events
+ao_module_setWindowTitle("Inflating from compressed file...");
+ao_module_setWindowIcon("loading spinner");
+
 var f_load = setInterval(function(){ 
-	$.get( "./tmp/" + f_rand + "messages", function( data ) {
+
+	$.ajax({
+		url: "getMessage.php?id=" + f_rand + "messages",
+		contentType: "text/plain"
+	}).done(function(data) { 
 		var progress = data.match(/ ([0-9]{0,2}%)/gim);
 		console.log(progress[progress.length - 1]);
 		f_totaltime = Math.floor(f_time / (parseInt(progress[progress.length - 1])/100));
@@ -85,6 +93,20 @@ var f_load = setInterval(function(){
 		$("#totalsize").text(f_filesize(f_size));
 		f_time += 1;
 	});
+	
+	/*
+	$.get("./tmp/" + f_rand + "messages", function( data ) {
+		var progress = data.match(/ ([0-9]{0,2}%)/gim);
+		console.log(progress[progress.length - 1]);
+		f_totaltime = Math.floor(f_time / (parseInt(progress[progress.length - 1])/100));
+		$("#bar").attr("style","width: " + progress[progress.length - 1]);
+		$("#time").text(f_convert(f_time));
+		$("#remaining").text(f_convert(f_totaltime - f_time));
+		$("#speed").text(f_filesize(Math.floor(f_size / f_totaltime)) + "/s");
+		$("#totalsize").text(f_filesize(f_size));
+		f_time += 1;
+	});
+	*/
 }, 1000);
 
 f_load;
@@ -93,6 +115,26 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 		clearInterval(f_load);
 		if(!f_cancel){
 			if(f_destdir.length >0){
+				//console.log('../SystemAOB/functions/file_system/move.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'&to=../../' + f_destdir + f_filenameToFoldername(f_file));
+				
+				$.get( '../SystemAOB/functions/file_system/move.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'&to=../../' + f_destdir + f_filenameToFoldername(f_file), function(data) {
+					if(data !== "DONE"){
+						if(ao_module_virtualDesktop){
+							parent.msgbox(data,'<i class="caution sign icon"></i> 7-Zip File Manager',"");
+							ao_module_close();
+						}else{
+							msgbox(data,"","");
+							setTimeout(function(){ts('#modal').modal('hide')},1500);
+						}
+					}else{
+						f_openFile(true);
+					}
+				});
+				/*
+				console.log('../SystemAOB/functions/file_system/copy_folder.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'/&target=../../' + f_destdir + f_rand + "/");
+				
+				console.log('../SystemAOB/functions/file_system/rename.php?file=../../' + f_destdir + f_rand + '&newFileName=../../' + f_destdir + f_file.replace(/^.*[\\\/]/, '').replace(/\./,"") + '/&hex=false');
+				
 				$.get( '../SystemAOB/functions/file_system/copy_folder.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'/&target=../../' + f_destdir + f_rand + "/", function(data) {
 					if(data !== "DONE"){
 						msgbox(data,"","");
@@ -104,6 +146,7 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 							setTimeout(function(){ts('#modal').modal('hide')},1500);
 						}
 					}
+					
 					$.get( '../SystemAOB/functions/file_system/rename.php?file=../../' + f_destdir + f_rand + '&newFileName=../../' + f_destdir + f_file.replace(/^.*[\\\/]/, '').replace(/\./,"") + '/&hex=false', function(data) {
 						if(data !== "DONE"){
 							$.get( '../SystemAOB/functions/file_system/delete.php?filename=../../' + f_destdir + f_rand, function(data) {
@@ -120,11 +163,25 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 						}
 					});
 				});
+				*/
 			}else{
 				f_openFile(false);
 			}
 		}
 });
+
+function f_filenameToFoldername(path){
+		var filename = path.split("\\").join("/").split("/").pop();
+		var filename = filename.split(".");
+		if (filename.length > 1){
+			filename.pop();
+		}
+		filename = filename.join(".");
+		if (filename.substring(0,5) == "inith"){
+			filename = filename.replace("inith","");
+		}
+		return filename;
+}
 
 function f_openFile(bool){
 	var Folder = "";
@@ -134,9 +191,9 @@ function f_openFile(bool){
 		//f_method = e then it is only single file
 		//f_method = x then it is a folder
 		if(f_method == "e"){
-			Folder = f_destdir.substring(3) + f_file.replace(/^.*[\\\/]/, '').replace(/\./,"") + "/" + f_dir.replace(/^.*[\\\/]/, '');
+			Folder = f_destdir.replace("../","") + f_filenameToFoldername(f_file) + "/" + f_dir.replace(/^.*[\\\/]/, '');
 		}else if(f_method == "x"){
-			Folder = f_destdir.substring(3) + f_file.replace(/^.*[\\\/]/, '').replace(/\./,"");
+			Folder = f_destdir.replace("../","") + f_filenameToFoldername(f_file);
 		}
 	}else{
 		//f_method = e then it is only single file
@@ -147,7 +204,7 @@ function f_openFile(bool){
 			Folder = "7-Zip File Manager/tmp/" + f_rand + "/";
 		}
 	}
-	console.log(f_rand + Folder);
+	//console.log(f_rand + Folder);
 	if(ao_module_virtualDesktop){
 		if(f_method == "e"){
 			ao_module_openFile(Folder,"7-Zip Preview");

@@ -18,6 +18,9 @@ include '../auth.php';
 		-ms-user-select: none; /* IE10+/Edge */
 		user-select: none; /* Standard */
 	}
+	tr{
+	    cursor:pointer;
+	}
 	tr:hover { 
 		background-color: #fafafa;
 	}
@@ -110,6 +113,7 @@ if (ao_module_virtualDesktop){
     //Push up the body section a bit to compensate for the floatWindow offsets
     $("body").css("padding-bottom","20px");
 }
+ao_module_setWindowSize(950,530);
 
 function basename(path){
     path = path.split("\\").join("/");
@@ -292,12 +296,13 @@ function functionbar_extract(){
 function functionbar_info(){
 	//showDialog("infoUI.php?file=" + file,365,475);
 	var displayname = ao_module_codec.decodeUmFilename(basename(file));
-	ao_module_newfw('7-Zip File Manager/' + "infoUI.php?file=" + file,displayname + ' - Properties','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),365,475,undefined,undefined,true,true);
+	var icon = ao_module_utils.getIconFromExt(displayname.split(".").pop().trim());
+	ao_module_newfw('7-Zip File Manager/' + "infoUI.php?file=" + file,displayname + ' - Properties',icon,'7-ZipProgressUI' + Math.floor(Math.random()*100),365,475,undefined,undefined,true,true);
 }
 
 function showDialog(href,x,y){
 	if(ao_module_virtualDesktop){
-		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),x,y,undefined,undefined,true,true);
+		ao_module_newfw('7-Zip File Manager/' + href,'Extract Files - 7zip File Manager','external','7-ZipProgressUI' + Math.floor(Math.random()*100),x,y,undefined,undefined,true,true);
 	}else{
 		$.get( href, function( data ) {
 			$( "#modaldata" ).html( data );
