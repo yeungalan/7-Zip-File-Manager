@@ -80,7 +80,8 @@ ao_module_setWindowIcon("loading spinner");
 var f_load = setInterval(function(){ 
 
 	$.ajax({
-		url: "getMessage.php?id=" + f_rand + "messages",
+		//url: "getMessage.php?id=" + f_rand + "messages",
+		url: "./tmp/" + f_rand + "messages",
 		contentType: "text/plain"
 	}).done(function(data) { 
 		var progress = data.match(/ ([0-9]{0,2}%)/gim);
@@ -130,40 +131,6 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 						f_openFile(true);
 					}
 				});
-				/*
-				console.log('../SystemAOB/functions/file_system/copy_folder.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'/&target=../../' + f_destdir + f_rand + "/");
-				
-				console.log('../SystemAOB/functions/file_system/rename.php?file=../../' + f_destdir + f_rand + '&newFileName=../../' + f_destdir + f_file.replace(/^.*[\\\/]/, '').replace(/\./,"") + '/&hex=false');
-				
-				$.get( '../SystemAOB/functions/file_system/copy_folder.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'/&target=../../' + f_destdir + f_rand + "/", function(data) {
-					if(data !== "DONE"){
-						msgbox(data,"","");
-						if(ao_module_virtualDesktop){
-							parent.msgbox(data,"","");
-							ao_module_close();
-						}else{
-							msgbox(data,"","");
-							setTimeout(function(){ts('#modal').modal('hide')},1500);
-						}
-					}
-					
-					$.get( '../SystemAOB/functions/file_system/rename.php?file=../../' + f_destdir + f_rand + '&newFileName=../../' + f_destdir + f_file.replace(/^.*[\\\/]/, '').replace(/\./,"") + '/&hex=false', function(data) {
-						if(data !== "DONE"){
-							$.get( '../SystemAOB/functions/file_system/delete.php?filename=../../' + f_destdir + f_rand, function(data) {
-							});
-							if(ao_module_virtualDesktop){
-								parent.msgbox(data,"","");
-								ao_module_close();
-							}else{
-								msgbox(data,"","");
-								setTimeout(function(){ts('#modal').modal('hide')},1500);
-							}
-						}else{
-							f_openFile(true);
-						}
-					});
-				});
-				*/
 			}else{
 				f_openFile(false);
 			}
