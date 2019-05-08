@@ -2,7 +2,7 @@
 A wrapper for ArOZ Online Beta system. This webapp using UNIX shell and PHP as base.
 
 ## Installation
-Download the repo to your desktop, rezipping only the folder "FFmpeg" and upload it to your ArOZ Online System via the "Add or Remove WebApp" interface in the System Settings > Host.
+Download the repo to your desktop, rezipping only the folder "7-Zip-File-Manager" and upload it to your ArOZ Online System via the "Add or Remove WebApp" interface in the System Settings > Host.
 
 Sometimes you may need to fix the premission by using following bash command
 ```bash
