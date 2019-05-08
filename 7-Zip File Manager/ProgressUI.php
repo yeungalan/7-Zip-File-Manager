@@ -139,6 +139,7 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 });
 
 function f_filenameToFoldername(path){
+	if(!f_DontCreateNewFolder){
 		var filename = path.split("\\").join("/").split("/").pop();
 		var filename = filename.split(".");
 		if (filename.length > 1){
@@ -149,6 +150,9 @@ function f_filenameToFoldername(path){
 			filename = filename.replace("inith","");
 		}
 		return filename;
+	}else{
+		return "";
+	}
 }
 
 function f_openFile(bool){

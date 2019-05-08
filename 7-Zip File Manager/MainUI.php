@@ -5,10 +5,13 @@ include '../auth.php';
 <html>
 <head>
     <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=0.86, minimum-scale=0.86, user-scalable=no">
+
 	<script src="../script/jquery.min.js"></script>
     <link rel="stylesheet" href="../script/tocas/tocas.css">
 	<script type='text/javascript' src="../script/tocas/tocas.js"></script>
 	<script type='text/javascript' src="../script/ao_module.js"></script>
+	<script type='text/javascript' src="jquery.mobile.min.js"></script>
 	<title>7z File Manager</title>
 	<style>
 	body{
@@ -41,9 +44,6 @@ include '../auth.php';
     <a class="item" onclick="functionbar_extract();">
         <i class="minus icon"></i> Extract
     </a>
-    <a class="item disabled" onclick="functionbar_extract();">
-        <i class="copy icon"></i> Copy
-    </a>
 	<a class="item"  onclick="msgbox('Error: Operation is not supported','red','white')">
         <i class="remove icon"></i> Clear Cache
     </a>
@@ -69,7 +69,7 @@ include '../auth.php';
 
 <!-- use for displaying dialog , for VDI user , use VDI module instead -->
 <div class="ts modals dimmer">
-    <dialog id="modal" class="ts basic modal" style="background-color: white;color: black!important" open>
+    <dialog id="modal" class="ts closable basic modal" style="background-color: white;color: black!important" open>
         <div class="content" id="modaldata">
         </div>
     </dialog>
@@ -134,6 +134,9 @@ $('body').on('click', function(e) {
     return;
   $("tr").removeAttr("style");
 });
+
+
+
 document.onkeydown = function(e) {
     if($("[style='background-color: #e9e9e9;']").length > 0){
         var htmlelement = $("[style='background-color: #e9e9e9;']");
@@ -301,7 +304,7 @@ function functionbar_info(){
 	//showDialog("infoUI.php?file=" + file,365,475);
 	var displayname = ao_module_codec.decodeUmFilename(basename(file));
 	var icon = ao_module_utils.getIconFromExt(displayname.split(".").pop().trim());
-	ao_module_newfw('7-Zip File Manager/' + "infoUI.php?file=" + file,displayname + ' - Properties',icon,'7-ZipProgressUI' + Math.floor(Math.random()*100),365,475,undefined,undefined,true,true);
+	showDialog("infoUI.php?file=" + file,displayname + ' - Properties',icon,365,475);
 }
 
 function showDialog(href,x,y){
