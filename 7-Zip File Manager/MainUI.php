@@ -233,12 +233,7 @@ function load(htmlelement){
 							if(tdpath.includes("?")){
 					            var tdicon = '<i class="exclamation triangle icon"></i>';
 					        }
-							if(tdpath.includes(".")){
-								tmp = tmp + "<td>" + tdicon + ao_module_codec.decodeUmFilename(tdpath) + "</td>";							
-							}else{
-								tmp = tmp + "<td>" + tdicon + ao_module_codec.decodeHexFoldername(tdpath) + "</td>";
-							}
-											        
+							tmp = tmp + "<td>" + tdicon + tdpath + "</td>";					        
 					    }else{
 					        tmp = tmp + "<td>" + value[key] + "</td>";
 					    }
@@ -249,6 +244,15 @@ function load(htmlelement){
 				$("#tbody").append(tmp + "</tr>");
 			});
 			
+			//Little patch for HEX file name (PATCH)
+			$( "tr td:first-child" ).each( function( index, element ){
+				var tpath = $(this);
+				if(/^inith[0-9a-fA-F]*\..*$|^[0-9a-fA-F]*$/.test($(tpath).text())){
+					$.get( '../SystemAOB/functions/file_system/um_filename_decoder.php?filename=' + $(tpath).text(), function( decodedfilename ) {
+						$(tpath).text(decodedfilename);
+					});
+				}
+			});
 			
 			//process for Prev button 
 			var path = $(htmlelement).attr("path").split("/");
