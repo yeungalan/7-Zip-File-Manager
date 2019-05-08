@@ -12,7 +12,6 @@ include '../auth.php';
 |-----------------------------|
 Yes ! This is an 7Zip logo
 */
-
 $rand = $_GET["rand"];
 
 if(!isset($_GET["method"])){
