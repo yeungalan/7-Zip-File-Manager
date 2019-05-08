@@ -32,7 +32,7 @@ include '../auth.php';
 
 					<div class="field">
 						<label>Extract to:</label>
-						<div class="ts labeled input" style="width:100%">
+						<div class="ts labeled action input" style="width:100%">
 							<div class="ts label">
 								/AOR/
 							</div>
@@ -106,7 +106,7 @@ function updatePath(){
 	if(path.slice(-1) !== "/"){
 		path = path + "/";
 	}
-	$("#filesshow").text("Target: /AOR/" + path + f_file.replace(/^.*[\\\/]/, '').replace(".","") + "/" + displayPath);
+	$("#filesshow").text("Target: /AOR/" + path + ao_module_codec.decodeUmFilename(f_file.replace(/^.*[\\\/]/, '')).replace(/\.[^.]*$/,'') + "/" + displayPath);
 	f_extractTo = "../" + path;
 }
 
@@ -129,15 +129,6 @@ function getUUID(){
 	return new Date().getTime();
 }
 
-/* still in implmention
-$( "#path" ).keypress(function() {
-	$.get( "opr.php?method=ListAORDir&dir=" + $( "#path" ).val(), function( data ) {
-	   $( "#path" ).autocomplete({
-		source: JSON.parse(data)
-		});
-	});
-});
-*/
 
 </script>
 </html>
