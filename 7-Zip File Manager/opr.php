@@ -12,7 +12,6 @@ include '../auth.php';
 |-----------------------------|
 Yes ! This is an 7Zip logo
 */
-
 $rand = $_GET["rand"];
 
 if(!isset($_GET["method"])){
@@ -33,9 +32,9 @@ if(strcasecmp(substr(PHP_OS, 0, 3), 'WIN') == 0){
 	}
 }else{
 	if(strpos(exec('uname -m'), 'arm') !== false){
-		$executions = "./7za";
+		$executions = "LANG=\"en_HK.UTF-8\" && "."./7za";
 	}else{
-		$executions = "./7za_x86";
+		$executions = "LANG=\"en_HK.UTF-8\" && "."./7za_x86";
 	}
 }
 

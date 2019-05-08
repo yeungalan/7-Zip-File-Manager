@@ -38,20 +38,11 @@ include '../auth.php';
 </head>
 <body>
 <div class="ts labeled icon menu" style="box-shadow: 0px 0px 0px 0 #000000 !important;">
-    <a class="item disabled" onclick="msgbox('Error: Operation is not supported','red','white')">
-        <i class="plus icon"></i> Add
-    </a>
     <a class="item" onclick="functionbar_extract();">
         <i class="minus icon"></i> Extract
     </a>
-    <a class="item" onclick="msgbox('Warning: Not implemented','yellow','Black')">
-        <i class="chevron down icon"></i> Test
-    </a>
     <a class="item disabled" onclick="functionbar_extract();">
         <i class="copy icon"></i> Copy
-    </a>
-	<a class="item disabled" onclick="functionbar_extract();">
-        <i class="move icon"></i> Move
     </a>
 	<a class="item"  onclick="msgbox('Error: Operation is not supported','red','white')">
         <i class="remove icon"></i> Clear Cache
@@ -101,6 +92,10 @@ include '../auth.php';
 
 </body>
 <script>
+/*
+Reminder: the x and y for new windows no longer has any function;
+please change it on another page directly.
+*/
 //Global variable
 var random = Math.floor((Math.random() * 10000) + 1000);
 var file = "<?php echo $_GET["file"] ?>";
@@ -109,6 +104,11 @@ var file = "<?php echo $_GET["file"] ?>";
 ao_module_setWindowIcon("file archive outline");
 ao_module_setGlassEffectMode();
 ao_module_setWindowTitle(ao_module_codec.decodeUmFilename(basename(file)) + " 7-Zip File Manager");
+
+if(!["7Z","LZMA","CAB","ZIP","GZIP","BZIP2","Z","TAR"].includes(basename(file).split(".")[1].toUpperCase())){
+	msgbox('Warning: Unsupport file type','yellow','black');
+}
+
 if (ao_module_virtualDesktop){
     //Push up the body section a bit to compensate for the floatWindow offsets
     $("body").css("padding-bottom","20px");
@@ -176,7 +176,7 @@ document.onkeydown = function(e) {
 
 
 //for load data into table
-load($(returnBtn));
+//load($(returnBtn));
 
 function onsingleclick(htmlelement){
 	$("tr").removeAttr("style");
@@ -233,12 +233,7 @@ function load(htmlelement){
 							if(tdpath.includes("?")){
 					            var tdicon = '<i class="exclamation triangle icon"></i>';
 					        }
-							if(tdpath.includes(".")){
-								tmp = tmp + "<td>" + tdicon + ao_module_codec.decodeUmFilename(tdpath) + "</td>";							
-							}else{
-								tmp = tmp + "<td>" + tdicon + ao_module_codec.decodeHexFoldername(tdpath) + "</td>";
-							}
-											        
+							tmp = tmp + "<td>" + tdicon + ao_module_codec.decodeUmFilename(tdpath) + "</td>";					        
 					    }else{
 					        tmp = tmp + "<td>" + value[key] + "</td>";
 					    }
@@ -249,6 +244,19 @@ function load(htmlelement){
 				$("#tbody").append(tmp + "</tr>");
 			});
 			
+			/*
+			//Little patch for HEX file name (PATCH)
+			$( "tr td:first-child" ).each( function( index, element ){
+				var tpath = $(this);
+				if(/^inith[0-9a-fA-F]*\..*$|^[0-9a-fA-F]*$/.test($(tpath).text())){
+					
+					$.get( '../SystemAOB/functions/file_system/um_filename_decoder.php?filename=' + $(tpath).text(), function( decodedfilename ) {
+						$(tpath).text(decodedfilename);
+					});
+					
+				}
+			});
+			*/
 			
 			//process for Prev button 
 			var path = $(htmlelement).attr("path").split("/");
@@ -257,7 +265,7 @@ function load(htmlelement){
 				previousPath = "";
 			}
 			//console.log(previousPath);
-			$("#breadcrumb").html('<button class="ts icon mini basic button" currPath="' + $(htmlelement).attr("path") + '" path="' + previousPath + '" attr="Dir" id="returnBtn" onclick="load(this)"><i class="level up icon"></i></button> <p href="#!" class="section">' + file.replace(/^.*[\\\/]/, '') +'</p><div class="divider">/</div>');
+			$("#breadcrumb").html('<button class="ts icon mini basic button" currPath="' + $(htmlelement).attr("path") + '" path="' + previousPath + '" attr="Dir" id="returnBtn" onclick="load(this)"><i class="level up icon"></i></button> <p href="#!" class="section">' + ao_module_codec.decodeUmFilename(file.replace(/^.*[\\\/]/, '')) +'</p><div class="divider">/</div>');
 			if($(htmlelement).attr("path").length > 1){
 				$.each(path, function( a, key ) {
 					$("#breadcrumb").append('<p href="#!" class="section"><i class="folder icon"></i>' + key + '</p><div class="divider">/</div>');
@@ -279,9 +287,9 @@ function contextmenu_extract(){
 function functionbar_extract(){
 	//extract files or dir , if file then pass method=e , if dir then pass method=x
 	if($("[style='background-color: #e9e9e9;']").attr("attr") == "Dir"){
-		showDialog("CopyNMoveUI.php?method=x&rand=" + random + "&file=" + file + "&dir=" + $($("[style='background-color: #e9e9e9;']")).attr("path"),720,250);
+		showDialog("CopyNMoveUI.php?method=x&rand=" + random + "&file=" + file + "&dir=" + $($("[style='background-color: #e9e9e9;']")).attr("path"),720,280);
 	}else if($("[style='background-color: #e9e9e9;']").attr("attr") == "File"){
-		showDialog("CopyNMoveUI.php?method=e&rand=" + random + "&file=" + file + "&dir=" + $("[style='background-color: #e9e9e9;']").attr("path"),720,250);
+		showDialog("CopyNMoveUI.php?method=e&rand=" + random + "&file=" + file + "&dir=" + $("[style='background-color: #e9e9e9;']").attr("path"),720,280);
 	}else{
 		showDialog("CopyNMoveUI.php?method=x&rand=" + random + "&file=" + file + "&dir=" + $("#returnBtn").attr("currPath"),720,250);
 	}

@@ -67,8 +67,8 @@ var f_method = "<?php echo $_GET["method"] ?>";
 var f_rand = "<?php echo $_GET["rand"] ?>";
 var f_file = "<?php echo $_GET["file"] ?>";
 var f_dir = "<?php echo $_GET["dir"] ?>";
+var f_DontCreateNewFoler = "<?php echo $_GET["DontCreateNewFolder"] ?>";
 var f_size = "<?php echo filesize($_GET["file"]); ?>";
-var f_DontCreateNewFolder = <?php echo $_GET["DontCreateNewFolder"] ?>;
 var f_destdir = "<?php echo isset($_GET["destdir"]) ? $_GET["destdir"] : ""; ?>";
 var f_time = 1;
 var f_totaltime = 1;
@@ -81,7 +81,6 @@ ao_module_setWindowIcon("loading spinner");
 var f_load = setInterval(function(){ 
 
 	$.ajax({
-		//url: "getMessage.php?id=" + f_rand + "messages",
 		url: "./tmp/" + f_rand + "messages",
 		contentType: "text/plain"
 	}).done(function(data) { 
@@ -118,8 +117,11 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 		if(!f_cancel){
 			if(f_destdir.length >0){
 				//console.log('../SystemAOB/functions/file_system/move.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'&to=../../' + f_destdir + f_filenameToFoldername(f_file));
-				
+				console.log(f_destdir);
+				console.log(f_filenameToFoldername(f_file));
 				$.get( '../SystemAOB/functions/file_system/move.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'&to=../../' + f_destdir + f_filenameToFoldername(f_file), function(data) {
+					console.log('DST' + f_destdir);
+					console.log('Move to:../../' + f_destdir + f_filenameToFoldername(f_file));
 					if(data !== "DONE"){
 						if(ao_module_virtualDesktop){
 							parent.msgbox(data,'<i class="caution sign icon"></i> 7-Zip File Manager',"");
@@ -132,6 +134,40 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 						f_openFile(true);
 					}
 				});
+				/*
+				console.log('../SystemAOB/functions/file_system/copy_folder.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'/&target=../../' + f_destdir + f_rand + "/");
+				
+				console.log('../SystemAOB/functions/file_system/rename.php?file=../../' + f_destdir + f_rand + '&newFileName=../../' + f_destdir + f_file.replace(/^.*[\\\/]/, '').replace(/\./,"") + '/&hex=false');
+				
+				$.get( '../SystemAOB/functions/file_system/copy_folder.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'/&target=../../' + f_destdir + f_rand + "/", function(data) {
+					if(data !== "DONE"){
+						msgbox(data,"","");
+						if(ao_module_virtualDesktop){
+							parent.msgbox(data,"","");
+							ao_module_close();
+						}else{
+							msgbox(data,"","");
+							setTimeout(function(){ts('#modal').modal('hide')},1500);
+						}
+					}
+					
+					$.get( '../SystemAOB/functions/file_system/rename.php?file=../../' + f_destdir + f_rand + '&newFileName=../../' + f_destdir + f_file.replace(/^.*[\\\/]/, '').replace(/\./,"") + '/&hex=false', function(data) {
+						if(data !== "DONE"){
+							$.get( '../SystemAOB/functions/file_system/delete.php?filename=../../' + f_destdir + f_rand, function(data) {
+							});
+							if(ao_module_virtualDesktop){
+								parent.msgbox(data,"","");
+								ao_module_close();
+							}else{
+								msgbox(data,"","");
+								setTimeout(function(){ts('#modal').modal('hide')},1500);
+							}
+						}else{
+							f_openFile(true);
+						}
+					});
+				});
+				*/
 			}else{
 				f_openFile(false);
 			}
@@ -139,16 +175,20 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 });
 
 function f_filenameToFoldername(path){
-		var filename = path.split("\\").join("/").split("/").pop();
-		var filename = filename.split(".");
-		if (filename.length > 1){
-			filename.pop();
+		if(!f_DontCreateNewFoler){
+			var filename = path.split("\\").join("/").split("/").pop();
+			var filename = filename.split(".");
+			if (filename.length > 1){
+				filename.pop();
+			}
+			filename = filename.join(".");
+			if (filename.substring(0,5) == "inith"){
+				filename = filename.replace("inith","");
+			}
+			return filename;
+		}else{
+			return "";
 		}
-		filename = filename.join(".");
-		if (filename.substring(0,5) == "inith"){
-			filename = filename.replace("inith","");
-		}
-		return filename;
 }
 
 function f_openFile(bool){
@@ -228,7 +268,7 @@ function f_filesize(size){
 		return Math.floor(size/1048576*100)/100 + "MB";
 	}else if(size >= 1024){
 		return Math.floor(size/1024*100)/100 + "KB";
-	}else{
+	}else if(size > 0){
 		return size + "Bytes";
 	}
 }

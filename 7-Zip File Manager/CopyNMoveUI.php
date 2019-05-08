@@ -32,7 +32,7 @@ include '../auth.php';
 
 					<div class="field">
 						<label>Extract to:</label>
-						<div class="ts labeled action input" style="width:100%">
+						<div class="ts labeled input" style="width:100%">
 							<div class="ts label">
 								/AOR/
 							</div>
@@ -42,6 +42,11 @@ include '../auth.php';
 							</button>
 						</div>
 					</div>
+				</div>
+				<br>
+				<div class="ts checkbox">
+					<input type="checkbox" id="ZipFolderDontCreate">
+					<label for="ZipFolderDontCreate">Don't create new folder</label>
 				</div>
 				<p id="filesshow">Target: </p>
 			</div>
@@ -63,7 +68,11 @@ var f_dir = "<?php echo $_GET["dir"] ?>";
 var f_extractTo = "";
 
 ao_module_setFixedWindowSize();
-ao_module_setWindowSize(650,200);
+ao_module_setWindowSize(650,240);
+
+$( "#ZipFolderDontCreate" ).change(function() {
+	updatePath();
+}).change();
 
 function f_close(){
 	if(ao_module_virtualDesktop){
@@ -74,7 +83,7 @@ function f_close(){
 }
 
 function f_ok(){
-	var href = "ProgressUI.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&dir=" + f_dir + "&destdir=" + f_extractTo;
+	var href = "ProgressUI.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&dir=" + f_dir + "&destdir=" + f_extractTo + "&DontCreateNewFolder=" + $("#ZipFolderDontCreate").is( ":checked" );
 
 	if(ao_module_virtualDesktop){
 		ao_module_newfw('7-Zip File Manager/' + href,'7-Zip','file outline','7-ZipProgressUI' + Math.floor(Math.random()*100),720,250);
@@ -92,22 +101,38 @@ $( "#path" ).keyup(function() {
 });
 
 function updatePath(){
-	var path = $("#path").val();
-	var displayPath = "";
+	var SelectedPath = $("#path").val();
+	var ZipPath = "";
+	console.log(f_file);
+	var ZipNameAsPath = ao_module_codec.decodeUmFilename(f_file.replace(/^.*[\\\/]/, '')).split(".")[0] + "/";
+	var RootDir = "/AOR/";
+	
 	if(f_dir == ""){
-		displayPath = "...";
+		ZipPath = "...";
 	}else{
 	    if(f_method == "e"){
-		    displayPath = f_dir.replace(/^.*[\\\/]/, '');
+		    ZipPath = f_dir.replace(/^.*[\\\/]/, '');
 	    }else{
-	        displayPath = f_dir;
+	        ZipPath = f_dir;
 	    }
 	}
-	if(path.slice(-1) !== "/"){
-		path = path + "/";
+	if(SelectedPath.slice(-1) !== "/"){
+		SelectedPath = SelectedPath + "/";
 	}
-	$("#filesshow").text("Target: /AOR/" + path + ao_module_codec.decodeUmFilename(f_file.replace(/^.*[\\\/]/, '')).replace(/\.[^.]*$/,'') + "/" + displayPath);
-	f_extractTo = "../" + path;
+	
+	if(SelectedPath.includes("/media/") || (!SelectedPath.includes("C:\\") && SelectedPath.includes("/media/"))){
+		RootDir = "";
+	}
+	
+	if($("#ZipFolderDontCreate").is( ":checked" )){
+		ZipNameAsPath = "";
+	}
+	
+	console.log(SelectedPath);
+	console.log(ZipNameAsPath);
+	console.log(ZipPath);
+	$("#filesshow").text("Target: " + RootDir + SelectedPath + ZipNameAsPath + ZipPath);
+	f_extractTo = "../" + SelectedPath;
 }
 
 function selectFolder(){
@@ -129,6 +154,15 @@ function getUUID(){
 	return new Date().getTime();
 }
 
+/* depreacted
+$( "#path" ).keypress(function() {
+	$.get( "opr.php?method=ListAORDir&dir=" + $( "#path" ).val(), function( data ) {
+	   $( "#path" ).autocomplete({
+		source: JSON.parse(data)
+		});
+	});
+});
+*/
 
 </script>
 </html>
