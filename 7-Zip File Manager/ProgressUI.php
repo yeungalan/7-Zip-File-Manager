@@ -68,7 +68,7 @@ var f_rand = "<?php echo $_GET["rand"] ?>";
 var f_file = "<?php echo $_GET["file"] ?>";
 var f_dir = "<?php echo $_GET["dir"] ?>";
 var f_size = "<?php echo filesize($_GET["file"]); ?>";
-var f_DontCreateNewFolder = <?php echo $_GET["DontCreateNewFolder"] ?>;
+var f_DontCreateNewFolder = <?php echo isset($_GET["DontCreateNewFolder"]) ? $_GET["DontCreateNewFolder"] : "false"; ?>;
 var f_destdir = "<?php echo isset($_GET["destdir"]) ? $_GET["destdir"] : ""; ?>";
 var f_time = 1;
 var f_totaltime = 1;
@@ -118,8 +118,9 @@ $.get("opr.php?method=" + f_method + "&rand=" + f_rand + "&file=" + f_file + "&d
 		if(!f_cancel){
 			if(f_destdir.length >0){
 				//console.log('../SystemAOB/functions/file_system/move.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'&to=../../' + f_destdir + f_filenameToFoldername(f_file));
-				
-				$.get( '../SystemAOB/functions/file_system/move.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'&to=../../' + f_destdir + f_filenameToFoldername(f_file), function(data) {
+				//$.get( '../SystemAOB/functions/file_system/move.php?from=../../../7-Zip%20File%20Manager/tmp/' + f_rand +'&to=../../' + f_destdir + f_filenameToFoldername(f_file), function(data) {
+					
+				$.get( 'move.php?from=../7-Zip%20File%20Manager/tmp/' + f_rand +'&to=' + f_destdir + f_filenameToFoldername(f_file) + '&DontCreateNewFolder=' + f_DontCreateNewFolder , function(data) {
 					if(data !== "DONE"){
 						if(ao_module_virtualDesktop){
 							parent.msgbox(data,'<i class="caution sign icon"></i> 7-Zip File Manager',"");

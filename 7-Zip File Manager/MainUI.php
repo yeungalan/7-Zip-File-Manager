@@ -44,7 +44,7 @@ include '../auth.php';
     <a class="item" onclick="functionbar_extract();">
         <i class="minus icon"></i> Extract
     </a>
-	<a class="item"  onclick="msgbox('Error: Operation is not supported','red','white')">
+	<a class="item"  onclick="functionbar_clean();">
         <i class="remove icon"></i> Clear Cache
     </a>
 	<a class="item" onclick="functionbar_info();">
@@ -318,6 +318,12 @@ function showDialog(href,x,y){
 	}
 }
 
+function functionbar_clean(){
+	$.get( 'deltmp.php', function(data) {
+		msgbox(data,'','');
+	});
+	
+}
 function msgbox(content,bgcolor,fontcolor){
 	$(".snackbar").attr("style",'background-color: ' + bgcolor + ';color:' + fontcolor);
 	ts('.snackbar').snackbar({
