@@ -24,3 +24,6 @@ You do not need to install anything extra, this WebAPP already contains the pre-
 ## License
 7za: https://www.7-zip.org/license.txt <br>
 PHP File: MIT 
+
+##Known issues
+Windows can't decode non alphabet filename
