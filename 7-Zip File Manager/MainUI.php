@@ -11,7 +11,6 @@ include '../auth.php';
     <link rel="stylesheet" href="../script/tocas/tocas.css">
 	<script type='text/javascript' src="../script/tocas/tocas.js"></script>
 	<script type='text/javascript' src="../script/ao_module.js"></script>
-	<script type='text/javascript' src="jquery.mobile.min.js"></script>
 	<title>7z File Manager</title>
 	<style>
 	body{
@@ -135,8 +134,6 @@ $('body').on('click', function(e) {
   $("tr").removeAttr("style");
 });
 
-
-
 document.onkeydown = function(e) {
     if($("[style='background-color: #e9e9e9;']").length > 0){
         var htmlelement = $("[style='background-color: #e9e9e9;']");
@@ -245,6 +242,9 @@ function load(htmlelement){
 					}
 				});
 				$("#tbody").append(tmp + "</tr>");
+				$('tr').on('touchstart', function(e){
+					load(this);
+				});
 			});
 			
 			/*

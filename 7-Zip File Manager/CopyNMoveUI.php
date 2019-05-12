@@ -73,6 +73,10 @@ ao_module_setWindowSize(650,240);
 $( "#ZipFolderDontCreate" ).change(function() {
 	updatePath();
 }).change();
+$( "#path" ).keyup(function() {
+	updatePath();
+});
+$("#filesshow").text("Target: ");
 
 function f_close(){
 	if(ao_module_virtualDesktop){
@@ -95,10 +99,6 @@ function f_ok(){
 		});
 	}
 }
-
-$( "#path" ).keyup(function() {
-	updatePath();
-});
 
 function updatePath(){
 	var SelectedPath = $("#path").val();
