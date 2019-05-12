@@ -16,7 +16,7 @@ sudo chown www-data:www-data 7za
 ## Web Interface
 You can still use the wrapper's WebUI if you are not into the ArOZ Online System. This module also support FloatWindow Mode under Virtual Desktop Interface (ArOZ Online Only).
 
-<img src="https://dl.alanyeung.co/7zdemo.png">
+<img src="https://dl.alanyeung.co/7zdemov1.png">
 
 ## Running on ArOZ
 You do not need to install anything extra, this WebAPP already contains the pre-compiled binary,so just install and use it. :)
