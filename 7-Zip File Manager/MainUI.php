@@ -120,7 +120,7 @@ function basename(path){
 }
 
 load($("#returnBtn"));
-$.get("deltmp.php", function(data) {
+$.get("deltmp.php?forced=false", function(data) {
 });
 
 
@@ -319,7 +319,7 @@ function showDialog(href,x,y){
 }
 
 function functionbar_clean(){
-	$.get( 'deltmp.php', function(data) {
+	$.get( 'deltmp.php?forced=true', function(data) {
 		msgbox(data,'','');
 	});
 	

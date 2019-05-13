@@ -73,6 +73,7 @@ var f_destdir = "<?php echo isset($_GET["destdir"]) ? $_GET["destdir"] : ""; ?>"
 var f_time = 1;
 var f_totaltime = 1;
 var f_cancel = false;
+var f_iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 //Initiate floatWindow events
 ao_module_setWindowTitle("Inflating from compressed file...");
@@ -187,9 +188,17 @@ function f_openFile(bool){
 		ao_module_close();
 	}else{
 		if(f_method == "e"){
-			window.open("../" + Folder);
+			if(f_iOS){
+				window.location.replace("../" + Folder)
+			}else{
+				window.open("../" + Folder);
+			}
 		}else if(f_method == "x"){
-			window.open("../SystemAOB/functions/file_system/index.php?controlLv=2#../../../" + Folder);
+			if(f_iOS){
+				window.location.replace("../SystemAOB/functions/file_system/index.php?controlLv=2#../../../" + Folder)
+			}else{
+				window.open("../SystemAOB/functions/file_system/index.php?controlLv=2#../../../" + Folder);
+			}
 		}
 		setTimeout(function(){ts('#modal').modal('hide')},1500);
 	}

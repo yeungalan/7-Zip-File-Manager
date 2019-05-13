@@ -5,7 +5,7 @@ include '../auth.php';
     $dirs = scandir("./tmp/");
     foreach ($dirs as $dir){
        $time = filectime("./tmp/".$dir) ;
-        if($time + 3600*3 <= time() && $dir !== ".." && $dir !== "."){
+        if(($time + 3600*3 <= time() || $_GET["forced"] == "true") && $dir !== ".." && $dir !== "."){
             //echo "$dir Deleted.\r\n";
             if(is_dir("./tmp/".$dir)){
                 rrmdir("./tmp/".$dir);
