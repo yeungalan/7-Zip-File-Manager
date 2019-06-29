@@ -1,6 +1,5 @@
 # 7-Zip File Manager
-<img src="https://img.shields.io/static/v1.svg?label=Language&message=PHP%20%20Javascript&color=purple"/>
-<img src="https://img.shields.io/static/v1.svg?label=Build&message=Pre-Release&color=blue"/>
+<img src="https://img.shields.io/static/v1.svg?label=Language&message=PHP%20%20Javascript&color=purple"/> <img src="https://img.shields.io/static/v1.svg?label=Build&message=Pre-Release&color=blue"/>
 
 <img src="https://dl.alanyeung.co/7zdemov1.png">
 
@@ -19,8 +18,10 @@ sudo chown www-data:www-data 7za
 ## Installation via Package Manager
 Search 7-zip file manager and click on install, after a while 7-zip should be available on your system
 
-## Functions
-- Unzip non-password protected archive
+## Future function
+- Unzip password protected archive
+- Create archive
+- Benchmark
 
 ## Running on ArOZ
 You do not need to install anything extra, this WebAPP already contains the pre-compiled binary,so just install and use it. :)
